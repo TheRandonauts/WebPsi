@@ -34,10 +34,14 @@
 <script>
     var TRIALS_PER_RUN = 30;
 
-    var envelope = [];
+    var envelope_null = [];
+    var envelope_top = [];
+    var envelope_bottom = [];
 
     for (var i = 0; i < TRIALS_PER_RUN; i += 0.01) {
-        envelope.push({ x: i, y: 1.645 * Math.sqrt(i) });
+        envelope_null.push({x: i, y: 0});
+        envelope_top.push({ x: i, y: 1.645 * Math.sqrt(i) });
+        envelope_bottom.push({ x: i, y: -1.645 * Math.sqrt(i) });
     }
 
     var randomWalkData = [{ x: 0, y: 0 }];
@@ -49,7 +53,16 @@
         data: {
             datasets: [
                 {
-                    data: envelope,
+                    data: envelope_null,
+                    showLine: true,
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderColor: 'grey',
+                    borderWidth: 1,
+                },
+                {
+                    data: envelope_top,
                     showLine: true,
                     pointRadius: 0,
                     fill: false,
@@ -59,13 +72,22 @@
                     label: 'p = 0.05'
                 },
                 {
+                    data: envelope_bottom,
+                    showLine: true,
+                    pointRadius: 0,
+                    fill: false,
+                    lineTension: 0,
+                    borderColor: 'grey',
+                    borderWidth: 1,
+                },
+                {
                     data: randomWalkData,
                     showLine: true,
                     pointRadius: 0,
                     fill: false,
                     lineTension: 0,
                     borderColor: 'white',
-                    borderWidth: 1
+                    borderWidth: 1.5
                 }
             ]
         },
@@ -103,8 +125,8 @@
                             display: false
                         },
                         ticks: {
-                            max: 2 * envelope[envelope.length - 1]['y'],
-                            min: -1.5 * envelope[envelope.length - 1]['y'],
+                            max: 2 * envelope_top[envelope_top.length - 1]['y'],
+                            min: -1.5 * envelope_top[envelope_top.length - 1]['y'],
                             display: false
                         }
                     }
