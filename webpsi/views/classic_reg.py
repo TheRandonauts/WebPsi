@@ -56,16 +56,16 @@ def generate_run_id():
 @ws_blueprint.route('/ws')
 def ws(websocket: WebSocket):
     while not websocket.closed:
-        action = websocket.receive()
+        split_message = websocket.receive().split()
+        action = split_message[0].upper()
         if action == 'PING':
             _generator.get_bytes(_BYTES_PER_TRIAL)
             websocket.send('PONG')
         elif action == 'RUN':
-            print(action)
-            #run_id = split_message[1]
-            #trial_count = int(split_message[2])
-            #if run_id in _valid_run_ids:
-                #threading.Thread(target=run_trials, args=(websocket, run_id, trial_count, request.remote_addr)).start()
+            run_id = split_message[1]
+            trial_count = int(split_message[2])
+            if run_id in _valid_run_ids:
+                threading.Thread(target=run_trials, args=(websocket, run_id, trial_count, request.remote_addr)).start()
 
 
 def run_trials(websocket: WebSocket, run_id: str, trial_count: int, remote_addr: str):
