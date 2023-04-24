@@ -17,12 +17,12 @@ import secrets
 import threading
 import time
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 from flask_breadcrumbs import register_breadcrumb
 from geventwebsocket.websocket import WebSocket
 
 from webpsi.utils import *
-
+from webpsi.auth import person
 
 _BYTES_PER_TRIAL = 25
 
@@ -32,7 +32,7 @@ ws_blueprint = Blueprint('classic_reg_ws', __name__)
 create_logs_dir_if_not_exist()
 _log_file = open('logs/classic_reg.csv', 'a')
 if os.stat('logs/classic_reg.csv').st_size == 0:
-    _log_file.write('dt,ip_address,run_id,trial_number,z_score,generator_id\n')
+    _log_file.write('dt,ip_address,user_id,run_id,trial_number,z_score,generator_id\n')
     _log_file.flush()
 
 _generator = get_generator_instance()
@@ -43,7 +43,10 @@ _valid_run_ids = []
 @blueprint.route('/')
 @register_breadcrumb(blueprint, '.', 'Classic REG Experiment')
 def classic_reg():
-    return render_template('classic_reg.html')
+    if person["is_logged_in"] == True:
+        return render_template('classic_reg.html')
+    else:
+        return redirect('/login')
 
 
 @blueprint.route('/api/run_id')
@@ -74,6 +77,6 @@ def run_trials(websocket: WebSocket, run_id: str, trial_count: int, remote_addr:
         data = _generator.get_bytes(_BYTES_PER_TRIAL)
         gaussian = to_gaussian(data)
         websocket.send('GAUSSIAN %f' % gaussian)
-        _log_file.write(f'{utc_datetime_string()},{remote_addr},{run_id},{i + 1},{gaussian:.3f},{_generator.id}\n')
+        _log_file.write(f'{utc_datetime_string()},{remote_addr},{person["uid"]},{run_id},{i + 1},{gaussian:.3f},{_generator.id}\n')
         _log_file.flush()
     _valid_run_ids.remove(run_id)

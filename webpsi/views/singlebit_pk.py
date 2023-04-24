@@ -16,12 +16,12 @@
 import base64
 import secrets
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 from flask_breadcrumbs import register_breadcrumb
 from geventwebsocket.websocket import WebSocket
 
 from webpsi.utils import *
-
+from webpsi.auth import person
 
 _BYTES_PER_TRIAL = 125
 
@@ -31,7 +31,7 @@ ws_blueprint = Blueprint('singlebit_pk_ws', __name__)
 create_logs_dir_if_not_exist()
 _log_file = open('logs/singlebit_pk.csv', 'a')
 if os.stat('logs/singlebit_pk.csv').st_size == 0:
-    _log_file.write('dt,ip_address,session_id,hit,raw_data,generator_id,generator_bit_numbering\n')
+    _log_file.write('dt,ip_address,user_id,session_id,hit,raw_data,generator_id,generator_bit_numbering\n')
     _log_file.flush()
 
 _generator = get_generator_instance()
@@ -42,7 +42,10 @@ _valid_session_ids = []
 @blueprint.route('/')
 @register_breadcrumb(blueprint, '.', 'Single-Bit PK Game')
 def singlebit_pk():
-    return render_template('singlebit_pk.html')
+    if person["is_logged_in"] == True:
+        return render_template('singlebit_pk.html')
+    else:
+        return redirect('/login')
 
 
 @blueprint.route('/api/session_id')
@@ -63,5 +66,5 @@ def ws(websocket: WebSocket):
                 data = _generator.get_bytes(_BYTES_PER_TRIAL)
                 hit = to_bool(data, _generator.bit_numbering)
                 websocket.send('HIT %d' % (1 if hit else 0))
-                _log_file.write(f'{utc_datetime_string()},{request.remote_addr},{session_id},{hit},{base64.b64encode(data).decode("utf-8")},{_generator.id},{_generator.bit_numbering.value}\n')
+                _log_file.write(f'{utc_datetime_string()},{request.remote_addr},{person["uid"]},{session_id},{hit},{base64.b64encode(data).decode("utf-8")},{_generator.id},{_generator.bit_numbering.value}\n')
                 _log_file.flush()

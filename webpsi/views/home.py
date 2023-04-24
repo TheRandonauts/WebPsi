@@ -13,14 +13,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with WebPsi.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect
 from flask_breadcrumbs import register_breadcrumb
 
-
 blueprint = Blueprint('home', __name__)
-
+from webpsi.auth import person
 
 @blueprint.route('/')
 @register_breadcrumb(blueprint, '.', 'Home')
 def home():
-    return render_template('home.html')
+    if person["is_logged_in"] == True:
+        return render_template('home.html')
+    else:
+        return redirect('/login')

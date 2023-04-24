@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Randogoth
+# Copyright (C) 2023 Randogoth
 #
 # WebPsi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -13,14 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with WebPsi.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import Blueprint, render_template
-from flask_breadcrumbs import register_breadcrumb
+import pyrebase
 
+from webpsi.config import FIREBASE_CONFIG
 
-blueprint = Blueprint('login', __name__)
-
-
-@blueprint.route('/login')
-@register_breadcrumb(blueprint, '.', 'Sign In')
-def login():
-    return render_template("login.html")
+firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
+auth = firebase.auth()
+person = {"is_logged_in": False, "name": "", "email": "", "uid": ""}
