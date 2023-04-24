@@ -1,4 +1,4 @@
-# Copyright (C) 2020 AndieNoir
+# Copyright (C) 2020 Randogoth
 #
 # WebPsi is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -13,14 +13,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with WebPsi.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
+from flask import Blueprint, render_template
+from flask_breadcrumbs import register_breadcrumb
 
-from webpsi.generator.rndo_comscire import Randonautica_QRNG
 
-GENERATOR_CLASS = Randonautica_QRNG
-FIREBASE_CONFIG = {
-    "apiKey": "AIzaSyCOFutuCwRnYbnRPquUsbRHHMLrQaSUx64",
-    "authDomain": "randonautica-2da58.firebaseapp.com",
-    "databaseURL": "https://randonautica-2da58.firebaseio.com",
-    "storageBucket": "randonautica-2da58.appspot.com",
-}
+blueprint = Blueprint('login', __name__)
+
+
+@blueprint.route('/login')
+@register_breadcrumb(blueprint, '.', 'Login')
+def login():
+    return render_template("login.html")

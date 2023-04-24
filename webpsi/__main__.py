@@ -13,22 +13,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with WebPsi.  If not, see <https://www.gnu.org/licenses/>.
 
-from flask import Flask
+from flask import Flask, request, redirect, url_for
 from flask_breadcrumbs import Breadcrumbs, default_breadcrumb_root
 from flask_sockets import Sockets
 from gevent import pywsgi
 from geventwebsocket.handler import WebSocketHandler
+import pyrebase
 
-from webpsi.views import home, classic_reg, singlebit_pk
-
+from webpsi.views import home, login, result, classic_reg, singlebit_pk
+from webpsi.config import FIREBASE_CONFIG
 
 app = Flask(__name__)
 sockets = Sockets(app)
+
+firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
+auth = firebase.auth()
+person = {"is_logged_in": False, "name": "", "email": "", "uid": ""}
 
 Breadcrumbs(app)
 default_breadcrumb_root(home.blueprint, '.')
 
 app.register_blueprint(home.blueprint)
+app.register_blueprint(login.blueprint, url_prefix='/login')
 
 app.register_blueprint(classic_reg.blueprint, url_prefix='/classic_reg')
 sockets.register_blueprint(classic_reg.ws_blueprint, url_prefix='/classic_reg')
@@ -38,5 +44,31 @@ sockets.register_blueprint(singlebit_pk.ws_blueprint, url_prefix='/singlebit_pk'
 
 server = pywsgi.WSGIServer(('0.0.0.0', 58700), application=app, handler_class=WebSocketHandler)
 server.serve_forever()
+
+app.route('/result', methods = ["POST", "GET"])
+app.register_breadcrumb(login.blueprint, '.', 'Login')
+def result():
+    if request.method == "POST":        #Only if data has been posted
+        result = request.form           #Get the data
+        email = result["email"]
+        password = result["pass"]
+        try:
+            #Try signing in the user with the given information
+            user = auth.sign_in_with_email_and_password(email, password)
+            #Insert the user data in the global person
+            person["is_logged_in"] = True
+            person["email"] = user["email"]
+            person["uid"] = user["localId"]
+            #Redirect to welcome page
+            return redirect(url_for('home'))
+        except:
+            #If there is any error, redirect back to login
+            return redirect(url_for('login'))
+    else:
+        if person["is_logged_in"] == True:
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('login'))
+
 
 app.run(host='0.0.0.0', port=58700)
