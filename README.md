@@ -6,59 +6,14 @@ A Python web app to aid psychic abilities experiments.
 Running
 -------
 
-1. WebPsi currently supports local and remote random number generation using ComScire QNG. For local, install
-   [ComScire driver](https://comscire.com/downloads/). For remote, run [Quanttp](https://github.com/awasisto/quanttp)
-   on the remote machine and set `QUANTTP_LOCATION` environment variable
-   
-   Example:
-
-   ```
-   # Windows
-   set QUANTTP_LOCATION=192.168.0.136:8080/quanttp
-
-   # Linux
-   export QUANTTP_LOCATION=192.168.0.136:8080/quanttp
-   ```
-
-2. Run the following commands
+1. Run the following commands
 
    ```
    pip3 install -r requirements.txt
    python3 -m webpsi
    ```
 
-3. Open http://localhost:58700
-
-Adding a new random number generator
-------------------------------------
-
-1.  Create a class that extends `Generator` and override the `get_bytes` method
-
-    Example:
-
-    ```python
-    # webpsi/generator/dev_hwrng.py
-    
-    from webpsi.generator.base import Generator
-    
-    
-    class DevHwrng(Generator, id='my_rng', bit_numbering=Generator.BitNumbering.UNKNOWN):
-    
-       def get_bytes(self, length):
-           with open('/dev/hwrng', 'rb') as f:
-               return f.read(length)
-    ```
-
-2.  Set the generator class on `config.py`
-
-    ```python
-    # webpsi/config.py
-    
-    from webpsi.generator.dev_hwrng import DevHwrng
-    
-    
-    GENERATOR_CLASS = DevHwrng
-    ```
+2. Open http://localhost:58700
 
 License
 -------
