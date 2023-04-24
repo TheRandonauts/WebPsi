@@ -3,17 +3,44 @@ WebPsi
 
 A Python web app to aid psychic abilities experiments.
 
-Running
--------
+This is the version used by Randonautica and requires access to the official Firestore database. 
+
+Please use the [public original version](https://github.com/AndieNoir/WebPsi)
+
+Installation
+------------
 
 1. Run the following commands
 
    ```
    pip3 install -r requirements.txt
+   ```
+
+2. Create an `.env` file and add the Firebase credentials:
+
+   ```
+   FIREBASE_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   FIREBASE_AUTHDOMAIN=xxxxxxxxxxxxxxxxxx.firebaseapp.com
+   FIREBASE_DATABASEURL=https://xxxxxxxxxxxxxxxxxx.firebaseio.com
+   FIREBASE_STORAGEBUCKET=xxxxxxxxxxxxxxxxxx.appspot.com
+   ```
+
+Running
+-------
+
+1. Run the following command for testing
+
+   ```
    python3 -m webpsi
    ```
 
-2. Open http://localhost:58700
+2. Build as Docker container using
+
+   ```
+   docker compose up
+   ```
+
+3. Open http://localhost:58700
 
 License
 -------
