@@ -31,24 +31,35 @@ default_breadcrumb_root(home.blueprint, '.')
 app.register_blueprint(home.blueprint)
 app.register_blueprint(login.blueprint)
 
+@app.route('/logout')
+def logout():
+    person["is_logged_in"] = False
+    auth.current_user = None
+    return redirect('/')
+
 @app.route('/result', methods = ["POST", "GET"])
 def result():
     if request.method == "POST":        #Only if data has been posted
         result = request.form           #Get the data
-        email = result["email"]
-        password = result["pass"]
-        try:
-            #Try signing in the user with the given information
-            user = auth.sign_in_with_email_and_password(email, password)
-            #Insert the user data in the global person
+        if "anonymous" in result:
             person["is_logged_in"] = True
-            person["email"] = user["email"]
-            person["uid"] = user["localId"]
-            #Redirect to welcome page
+            person["uid"] = "anonymous"
             return redirect('/')
-        except:
-            #If there is any error, redirect back to login
-            return redirect('/login')
+        else:
+            email = result["email"]
+            password = result["pass"]
+            try:
+                #Try signing in the user with the given information
+                user = auth.sign_in_with_email_and_password(email, password)
+                #Insert the user data in the global person
+                person["is_logged_in"] = True
+                person["email"] = user["email"]
+                person["uid"] = user["localId"]
+                #Redirect to welcome page
+                return redirect('/')
+            except:
+                #If there is any error, redirect back to login
+                return redirect('/login')
     else:
         if person["is_logged_in"] == True:
             return redirect('/')
