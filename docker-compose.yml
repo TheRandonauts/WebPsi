@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  webpsi:
+    image: webpsi
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 58700:58700
+    volumes:
+      - ./logs:/app/logs

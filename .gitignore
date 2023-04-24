@@ -1,0 +1,6 @@
+__pycache__/
+*.iml
+.idea/
+logs/
+.env
+requirements2.txt

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% set title = 'Sign In' %}
+
+{% block content %}
+<h5>Sign In </h5>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Login Form -->
+    <form action="/result" method="POST">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="exampleInputEmail1">Email address</label>
+          <input type="email" id="login" class="form-control fadeIn second" name="email" placeholder="email">
+          <small id="emailHelp" class="form-text text-muted">The same you use for the Randonautica app</small>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="exampleInputPassword1">Password</label>
+          <input type="password" id="password" class="form-control fadeIn third" name="pass" placeholder="password">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary fadeIn fourth">Sign In</button>
+      <button type="submit" name="anonymous" class="btn btn-secondary fadeIn fourth" value="true">Continue Anonymously</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
