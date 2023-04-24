@@ -14,13 +14,16 @@
 # along with WebPsi.  If not, see <https://www.gnu.org/licenses/>.
 
 import os
+from dotenv import load_dotenv
 
 from webpsi.generator.rndo_comscire import Randonautica_QRNG
 
+load_dotenv()
+
 GENERATOR_CLASS = Randonautica_QRNG
 FIREBASE_CONFIG = {
-    "apiKey": "AIzaSyCOFutuCwRnYbnRPquUsbRHHMLrQaSUx64",
-    "authDomain": "randonautica-2da58.firebaseapp.com",
-    "databaseURL": "https://randonautica-2da58.firebaseio.com",
-    "storageBucket": "randonautica-2da58.appspot.com",
+    "apiKey": os.environ.get("FIREBASE_APIKEY"),
+    "authDomain": os.environ.get("FIREBASE_AUTHDOMAIN"),
+    "databaseURL": os.environ.get("FIREBASE_DATABASEURL"),
+    "storageBucket": os.environ.get("FIREBASE_STORAGEBUCKET"),
 }
