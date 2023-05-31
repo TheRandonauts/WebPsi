@@ -9,4 +9,4 @@ services:
     ports:
       - 58700:58700
     volumes:
-      - /volumes/webpsi/logs:/app/logs
+      - /volumes/webpsi:/app
