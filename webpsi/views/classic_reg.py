@@ -30,8 +30,8 @@ blueprint = Blueprint('classic_reg', __name__)
 ws_blueprint = Blueprint('classic_reg_ws', __name__)
 
 create_logs_dir_if_not_exist()
-_log_file = open('logs/classic_reg.csv', 'a')
-if os.stat('logs/classic_reg.csv').st_size == 0:
+_log_file = open('data/logs/classic_reg.csv', 'a')
+if os.stat('data/logs/classic_reg.csv').st_size == 0:
     _log_file.write('dt,ip_address,user_id,run_id,trial_number,z_score,generator_id\n')
     _log_file.flush()
 

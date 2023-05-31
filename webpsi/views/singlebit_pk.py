@@ -29,8 +29,8 @@ blueprint = Blueprint('singlebit_pk', __name__)
 ws_blueprint = Blueprint('singlebit_pk_ws', __name__)
 
 create_logs_dir_if_not_exist()
-_log_file = open('logs/singlebit_pk.csv', 'a')
-if os.stat('logs/singlebit_pk.csv').st_size == 0:
+_log_file = open('data/logs/singlebit_pk.csv', 'a')
+if os.stat('data/logs/singlebit_pk.csv').st_size == 0:
     _log_file.write('dt,ip_address,user_id,session_id,hit,raw_data,generator_id,generator_bit_numbering\n')
     _log_file.flush()
 
