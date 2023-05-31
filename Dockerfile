@@ -18,7 +18,7 @@ COPY . /app
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers
-RUN adduser --disabled-password --gecos "" --group 1024 appuser
+RUN adduser --disabled-password --gecos "" --gid 1024 appuser
 RUN mkdir -p /app/logs
 RUN chown :1024 /app/logs
 USER appuser
