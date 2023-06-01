@@ -6,7 +6,7 @@ class Randonautica_QRNG(Generator, id='rndo', bit_numbering=Generator.BitNumberi
     def get_bytes(self, length):
         session = requests.Session()
         try:
-            response = session.get(f'https://api.qrng.rndo.it/api/json/randhex?device_id=QWR70154&length={length}', verify=False)
+            response = session.get(f'https://qrng.randonautica.com/api/json/randhex?device_id=QWR70154&length={length}')
             response.raise_for_status()
             return bytes.fromhex(response.json())
         except requests.exceptions.HTTPError as errh:

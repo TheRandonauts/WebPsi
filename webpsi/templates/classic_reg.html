@@ -135,7 +135,11 @@
         }
     });
 
-    var websocket = new WebSocket(document.location.href.replace('https://', 'ws://').replace(/\/$/, '') + '/ws');
+    if (location.protocol !== 'https:') {
+        var websocket = new WebSocket(document.location.href.replace('http://', 'ws://').replace(/\/$/, '') + '/ws');
+    } else {
+        var websocket = new WebSocket(document.location.href.replace('https://', 'wss://').replace(/\/$/, '') + '/ws');
+    }
 
     var owdData = [];
 
