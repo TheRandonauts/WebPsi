@@ -16,7 +16,7 @@
 import os
 from dotenv import load_dotenv
 
-from webpsi.generator.rndo_comscire import Randonautica_QRNG
+from webpsi.generator.rndo_comscire import Randonautica_QRNG, Temporal_QRNG
 
 load_dotenv()
 
